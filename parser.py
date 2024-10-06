@@ -16,7 +16,7 @@ class Parser:
 
         self.__initJSONPath = None
         self.__initJSONData = None
-        self.__workflowsToExecute = None
+        self.__LLMJson = None
 
         self.findInitJSON()
         self.readInit()
@@ -52,7 +52,7 @@ class Parser:
         search_command += '\n\n'
         search_command += str(self.__initJSONData)
 
-        ollama_process = subprocess.Popen(['ollama', 'run', 'llama3.1'], 
+        ollama_process = subprocess.Popen(['ollama', 'run', 'mistral-nemo'], 
                                 stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, 
                                 stderr=subprocess.PIPE, 
@@ -66,7 +66,7 @@ class Parser:
         ollama_process.stdin.flush()
         
         self.output, self.error = ollama_process.communicate()
-        print(self.output)
+        # print(self.output)
 
         ollama_process.stdin.close()
         ollama_process.stdout.close()
@@ -74,14 +74,12 @@ class Parser:
         ollama_process.terminate()
 
         output = self.extractJson()
-        print(output)
-
+        self.__LLMJson = output
        
     def extractJson(self):
         json_blobs = re.findall(r'\{.*?\}', self.output, re.DOTALL)
         return json_blobs[-1] if json_blobs else None
+    
+    def getLLMJson(self):
+        return self.__LLMJson
 
-parser = Parser()
-
-parser.setCurrentQuery("Please give me short report on the Headless Horseman myth. Tell me about the weather right after that.")
-parser.findApplicableModels()
