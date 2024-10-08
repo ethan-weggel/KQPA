@@ -26,6 +26,17 @@ class KQPA:
     def actuate(self):
         self.__actuator.actuate(self.__parser.getLLMJson())
 
-    def runMain(self, query):
-        pass
+    def runMain(self, query=""):
+        if query == "":
+            query = self.__query
+        self.__parser.setCurrentQuery(query)
+        self.__parser.findApplicableModels()
+        response = self.__parser.getLLMJson()
+        ## TODO: insert arranger file writing logic here
+        self.__actuator.actuate(response)
+
+kqpa = KQPA()
+kqpa.setQuery("Give me a general report on the Headless Horseman using the RAG engine model.")
+kqpa.runMain()
+
     

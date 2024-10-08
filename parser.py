@@ -11,7 +11,7 @@ class Parser:
 
         self.__currentQuery = None
 
-        self.__rootProjectDirectory = "../.."
+        self.__rootProjectDirectory = "../"
         self.__targetFilename = "init.json"
 
         self.__initJSONPath = None
@@ -34,6 +34,7 @@ class Parser:
         return None
 
     def readInit(self):
+        print(self.__initJSONPath)
         with open(self.__initJSONPath, 'r') as file:
             self.__initJSONData = json.load(file)
     
@@ -46,7 +47,8 @@ class Parser:
                           then add an entry to a json response for me. The key should be the model name, the value should be the path associated with the model. When finished, return \
                           to me the json object. As an example, if the target query is 'Good morning, can you give me a weather report and test the main interface.' then I expect \
                           {'model-#00000001': 'KNIT\\workflows\\models\\model1\\model-one-workflow-one.json', 'model-#00000002': 'KNIT\\workflows\\models\\model2\\model-two-workflow-two.json'}. \
-                          Show me your thought process. Make sure you are adding the exact things you think should be in the json response. The description does NOT need to match the entire query to be included. Put your final json response as the very last thing you say every time. Here is the target query:"
+                          Show me your thought process. Make sure you are adding the exact things you think should be in the json response. The description does NOT need to match the entire query \
+                            to be included. Put your final json response as the very last thing you say every time. Here is the target query:"
         
         search_command += str(self.__currentQuery)
         search_command += '\n\n'
@@ -73,13 +75,13 @@ class Parser:
         ollama_process.stderr.close()
         ollama_process.terminate()
 
-        output = self.extractJson()
-        self.__LLMJson = output
+        self.__LLMJson =  self.extractJson()
        
     def extractJson(self):
         json_blobs = re.findall(r'\{.*?\}', self.output, re.DOTALL)
         return json_blobs[-1] if json_blobs else None
     
     def getLLMJson(self):
-        return self.__LLMJson
+        # print(self.__LLMJson)
+        return json.loads(self.__LLMJson.replace("'", "\""))
 

@@ -10,9 +10,9 @@ sys.path.insert(0, readerPath)
 sys.path.insert(0, modelPath)
 sys.path.insert(0, dirPath)
 
-import reader as rd
-import model as md
-import Knit_HEADLESS as hh
+import reader as rd # type: ignore
+import model as md # type: ignore
+import Knit_HEADLESS as hh # type: ignore
 
 class Actuator:
     def __init__(self, path=None, args=None, query=None):
@@ -22,13 +22,14 @@ class Actuator:
 
         self.__headlessHorseman = None
 
-    def actuate(self, dict):
-        reader = rd.Reader("C:\\Users\\Ethan\\Documents\\Katherine\\Katherine-Node-Interfacing-Tool\\KNIT\\workflows\\models\\model3\\model-three-workflow-three.json")
-        reader.readModel()
-        model = md.Model(reader)
-        model.loadZipFunctions()
-        self.__horseman = hh.HeadlessHorseman(model)
-        self.__horseman.run()
+    def actuate(self, parsedDict):
+        for value in parsedDict.values():
+            reader = rd.Reader(value)
+            reader.readModel()
+            model = md.Model(reader)
+            model.loadZipFunctions()
+            self.__horseman = hh.HeadlessHorseman(model)
+            self.__horseman.run()
 
     def resetActuator(self, path=None, args=None, query=None):
         self.__executablePath = path
@@ -36,5 +37,5 @@ class Actuator:
         self.__query = query
 
 
-act = Actuator()
-act.actuate({})
+# act = Actuator()
+# act.actuate({})
