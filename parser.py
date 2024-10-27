@@ -31,7 +31,6 @@ class Parser:
         for dirpath, _, filenames in os.walk(self.__rootProjectDirectory):
             if self.__targetFilename in filenames:
                 self.__initJSONPath = os.path.join(dirpath, self.__targetFilename)
-        return None
 
     def readInit(self):
         print(self.__initJSONPath)
@@ -46,7 +45,7 @@ class Parser:
                           json data. Read each description in the json data to see if the model is applicable to the current query. If the model's description suggests the model can be run on the query \
                           then add an entry to a json response for me. The key should be the model name, the value should be the path associated with the model. When finished, return \
                           to me the json object. As an example, if the target query is 'Good morning, can you give me a weather report and test the main interface.' then I expect \
-                          {'model-#00000001': 'KNIT\\workflows\\models\\model1\\model-one-workflow-one.json', 'model-#00000002': 'KNIT\\workflows\\models\\model2\\model-two-workflow-two.json'}. \
+                          {'model-#00000001': 'model-one-workflow-one.json', 'model-#00000002': 'model-two-workflow-two.json'}. \
                           Show me your thought process. Make sure you are adding the exact things you think should be in the json response. The description does NOT need to match the entire query \
                             to be included. Put your final json response as the very last thing you say every time. Here is the target query:"
         

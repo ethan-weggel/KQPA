@@ -1,10 +1,13 @@
 from parser import Parser
 from actuator import Actuator
+from arranger import Arranger
+import sys
 
 class KQPA:
     def __init__(self, query=None):
         self.__parser = Parser()
         self.__actuator = Actuator()
+        self.__arranger = Arranger()
         self.__query = query
 
     def getQuery(self):
@@ -30,13 +33,22 @@ class KQPA:
         if query == "":
             query = self.__query
         self.__parser.setCurrentQuery(query)
+        print("Query set.")
         self.__parser.findApplicableModels()
+        print("Models found and returned.")
         response = self.__parser.getLLMJson()
-        ## TODO: insert arranger file writing logic here
+        print(response)
+        print("Models parsed.")
+        self.__arranger.arrangeModel(response, query)
+        print("Model arranged.")
         self.__actuator.actuate(response)
 
-kqpa = KQPA()
-kqpa.setQuery("Give me a general report on the Headless Horseman using the RAG engine model.")
-kqpa.runMain()
+
+def main(args):
+    kqpa = KQPA()
+    kqpa.runMain(' '.join(args[1:]))
+
+if __name__ == "__main__":
+    main(sys.argv)
 
     
